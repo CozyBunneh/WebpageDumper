@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../WebpageDumper.Domain.Abstract/WebpageDumper.Domain.Abstract.csproj" />
+    <ProjectReference Include="../../Infrastructure/External/WebpageDumper.Infrastructure.External.Abstract/WebpageDumper.Infrastructure.External.Abstract.csproj" />
+    <ProjectReference Include="../../Infrastructure/Persistence/WebpageDumper.Infrastructure.Persistence.Abstract/WebpageDumper.Infrastructure.Persistence.Abstract.csproj" />
   </ItemGroup>
 
 </Project>
