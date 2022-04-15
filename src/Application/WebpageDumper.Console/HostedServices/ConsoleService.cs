@@ -1,22 +1,26 @@
 using Microsoft.Extensions.Hosting;
-using WebpageDumper.Infrastructure.External.Abstract.Service;
+using WebpageDumper.Domain.Abstract.Services;
 
 namespace WebpageDumper.Application.WebpageDumper.Console.HostedService;
 
 public class ConsoleService : BackgroundService
 {
     private IHostApplicationLifetime _hostApplicationLifetime;
-    private IWebService _webService;
+    private IWebpageDumperService _webpageDumperService;
 
-    public ConsoleService(IHostApplicationLifetime hostApplicationLifetime, IWebService webService)
+    public ConsoleService(IHostApplicationLifetime hostApplicationLifetime, IWebpageDumperService webpageDumperService)
     {
         _hostApplicationLifetime = hostApplicationLifetime;
-        _webService = webService;
+        _webpageDumperService = webpageDumperService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // await _webService.GetFileListAsync();
+        var urlString = Environment.GetCommandLineArgs()[1];
+        var uri = new UriBuilder(urlString);
+        var pageName = uri.Host;
+
+        await _webpageDumperService.DumpWebpage(uri.Uri);
 
         _hostApplicationLifetime.StopApplication();
     }
