@@ -1,21 +1,27 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using WebpageDumper.Application.WebpageDumper.Console.HostedService;
+using WebpageDumper.Infrastructure.Domain.Configuration;
+using WebpageDumper.Infrastructure.External.Configuration;
+using WebpageDumper.Infrastructure.Persistence.Configuration;
 
-namespace WebpageDumper.Application.WebpageDumper.Console;
-
-class Program
+var builder = Host.CreateDefaultBuilder(args);
+builder.ConfigureLogging(logging =>
 {
-    public static async Task Main(string[] args)
-    {
-        var host = CreateHostBuilder(args).ConfigureAppConfiguration((hostContext, builder) =>
-        { }).Build();
-        await host.RunAsync();
-    }
+    logging.AddConsole();
+});
+builder.UseConsoleLifetime(consoleBuilder =>
+{
+    consoleBuilder.SuppressStatusMessages = true;
+});
+var host = builder.ConfigureServices(services =>
+{
+    services.AddLogging(logginBuilder => logginBuilder.AddConsole());
+    services.AddPersistenceServices();
+    services.AddExternalServices();
+    services.AddDomainServices();
+    services.AddHostedService<ConsoleService>();
+}).Build();
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-                Host.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-}
+await host.RunAsync();
