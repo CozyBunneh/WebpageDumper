@@ -13,16 +13,23 @@ public class FileService : IFileService
 
     public void CreateDirectory(string path)
     {
-        throw new NotImplementedException();
+        Directory.CreateDirectory(path);
     }
 
     public Task WriteFile(Stream fileData, string fileName)
     {
-        throw new NotImplementedException();
+        var fs = new FileStream(fileName, FileMode.CreateNew);
+        return fileData.CopyToAsync(fs);
     }
 
-    public Task WriteFileToPath(Stream fileData, string fileName, string path)
+    public Task WriteFileToPath(Stream fileData, string fileName, string? path = null)
     {
-        throw new NotImplementedException();
+        if (path != null)
+        {
+            CreateDirectory(path);
+            fileName = $"{path}/{fileName}";
+        }
+
+        return WriteFile(fileData, fileName);
     }
 }
