@@ -4,7 +4,7 @@ namespace WebpageDumper.Infrastructure.Webpage.Services;
 
 public class WebpageFileParserService : IWebpageFileParserService
 {
-    public IEnumerable<string> ParserFileForInternalLinks(string fileAsString)
+    public IList<string> ParserFileForInternalLinks(string fileAsString)
     {
         throw new NotImplementedException();
     }
