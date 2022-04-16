@@ -3,8 +3,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebpageDumper.Application.WebpageDumper.Console.HostedService;
 using WebpageDumper.Infrastructure.Domain.Configuration;
-using WebpageDumper.Infrastructure.External.Configuration;
 using WebpageDumper.Infrastructure.Persistence.Configuration;
+using WebpageDumper.Infrastructure.Webpage.Configuration;
 
 var builder = Host.CreateDefaultBuilder(args);
 builder.ConfigureLogging(logging =>
@@ -19,7 +19,7 @@ var host = builder.ConfigureServices(services =>
 {
     services.AddLogging(logginBuilder => logginBuilder.AddConsole());
     services.AddPersistenceServices();
-    services.AddExternalServices();
+    services.AddWebpageServices();
     services.AddDomainServices();
     services.AddHostedService<ConsoleService>();
 }).Build();

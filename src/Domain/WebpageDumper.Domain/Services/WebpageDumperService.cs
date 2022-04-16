@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using WebpageDumper.Domain.Abstract.Services;
-using WebpageDumper.Infrastructure.External.Abstract.Service;
 using WebpageDumper.Infrastructure.Persistence.Services;
+using WebpageDumper.Infrastructure.Webpage.Abstract.Service;
 
 namespace WebpageDumper.Domain.Services;
 
