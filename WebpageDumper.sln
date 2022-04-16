@@ -19,13 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Domain.Config
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{A1CF1CFD-0A34-4AF3-AD84-91B5B779EC25}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{0881846D-BF74-47A5-810C-069E1D350289}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Webpage", "Webpage", "{0881846D-BF74-47A5-810C-069E1D350289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.External", "src\Infrastructure\External\WebpageDumper.Infrastructure.External\WebpageDumper.Infrastructure.External.csproj", "{779F120B-176A-48BA-9F5E-A80C97383E0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.Webpage", "src\Infrastructure\Webpage\WebpageDumper.Infrastructure.Webpage\WebpageDumper.Infrastructure.Webpage.csproj", "{779F120B-176A-48BA-9F5E-A80C97383E0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.External.Abstract", "src\Infrastructure\External\WebpageDumper.Infrastructure.External.Abstract\WebpageDumper.Infrastructure.External.Abstract.csproj", "{80650E50-DAA8-471C-8239-4C3A53202959}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.Webpage.Abstract", "src\Infrastructure\Webpage\WebpageDumper.Infrastructure.Webpage.Abstract\WebpageDumper.Infrastructure.Webpage.Abstract.csproj", "{80650E50-DAA8-471C-8239-4C3A53202959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.External.Configuration", "src\Infrastructure\External\WebpageDumper.Infrastructure.External.Configuration\WebpageDumper.Infrastructure.External.Configuration.csproj", "{728E7145-F0BA-4448-BA3E-DFEDA25E96E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.Webpage.Configuration", "src\Infrastructure\Webpage\WebpageDumper.Infrastructure.Webpage.Configuration\WebpageDumper.Infrastructure.Webpage.Configuration.csproj", "{728E7145-F0BA-4448-BA3E-DFEDA25E96E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{0DE3881F-833C-41ED-9C8A-159F81E21E3C}"
 EndProject

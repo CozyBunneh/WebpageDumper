@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Domain/WebpageDumper.Domain.Configuration/WebpageDumper.Domain.Configuration.csproj" />
     <ProjectReference Include="../../Domain/WebpageDumper.Domain.Abstract/WebpageDumper.Domain.Abstract.csproj" />
-    <ProjectReference Include="../../Infrastructure/External/WebpageDumper.Infrastructure.External.Configuration/WebpageDumper.Infrastructure.External.Configuration.csproj" />
+    <ProjectReference Include="../../Infrastructure/Webpage/WebpageDumper.Infrastructure.Webpage.Configuration/WebpageDumper.Infrastructure.Webpage.Configuration.csproj" />
     <ProjectReference Include="../../Infrastructure/Persistence/WebpageDumper.Infrastructure.Persistence.Configuration/WebpageDumper.Infrastructure.Persistence.Configuration.csproj" />
   </ItemGroup>
 

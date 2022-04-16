@@ -1,4 +1,4 @@
-namespace WebpageDumper.Infrastructure.External.Extensions;
+namespace WebpageDumper.Infrastructure.Webpage.Extensions;
 
 public static class HttpClientExtensions
 {
