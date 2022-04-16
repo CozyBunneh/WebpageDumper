@@ -10,7 +10,7 @@ namespace WebpageDumper.Infrastructure.Webpage.UnitTest;
 [TestFixture]
 public class WebpageFileParserServiceTest
 {
-    private Fixture _fixture;
+    private Fixture? _fixture;
 
     [SetUp]
     public void Setup()
@@ -25,10 +25,11 @@ public class WebpageFileParserServiceTest
         // Arrange
         var sut = _fixture.Create<WebpageFileParserService>();
         var scriptId = Guid.NewGuid().ToString();
-        var htmlFileAsString = $"<!DOCTYPE html><html lang=\"en\" xmlns:fb=\"http://somelink.com\"><head><link rel=\"prefetch\" href=\"/assets/folder1/file1.jpg\" /><link rel=\"prefetch\" href=\"/assets/folder1/file2.jpg\" /><link rel=\"prefetch\" href=\"/assets/folder-2/file-3.jpg\" /><meta property=\"og:image\"content=\"https://www.site.com/files/images/file4.png\"/><link rel=\"author\" type=\"text/x-markdown\" href=\"/file5.txt\" /><link rel=\"icon\" type=\"image/png\" href=\"assets/i/favicon.png\" /></head><body><section><video autoplay loop muted playsinline preload=\"metadata\" data-videosrc=\"video1\" src=\"/assets/video/video1.mp4\"></video></section><svg xmlns=\"http://www.w3.org/2000/svg\"><a href=\"https://something.com/some1\">Link1</a><a href=\"/internal/link2\">Link2</a><script src=\"assets/js/lib/polyfills.js\"></script><script src=\"assets/js/lib/common.js?{scriptId}\"></script><script src=\"/assets/js/script1.js\"></script></body></html>";
+        var pageUri = new UriBuilder("https://www.site.com").Uri;
+        var htmlFileAsString = $"<!DOCTYPE html><html lang=\"en\" xmlns:fb=\"http://somelink.com\"><head><link rel=\"prefetch\" href=\"/assets/folder1/file1.jpg\" /><link rel=\"prefetch\" href=\"/assets/folder1/file2.jpg\" /><link rel=\"prefetch\" href=\"/assets/folder-2/file-3.jpg\" /><meta property=\"og:image\" content=\"https://www.site.com/files/images/file4.png\"/><link rel=\"author\" type=\"text/x-markdown\" href=\"/file5.txt\" /><link rel=\"icon\" type=\"image/png\" href=\"assets/i/favicon.png\" /></head><body><section><video autoplay loop muted playsinline preload=\"metadata\" data-videosrc=\"video1\" src=\"/assets/video/video1.mp4\"></video></section><svg xmlns=\"http://www.w3.org/2000/svg\"><a href=\"https://something.com/some1\">Link1</a><a href=\"/internal/link2\">Link2</a><script src=\"assets/js/lib/polyfills.js\"></script><script src=\"assets/js/lib/common.js?{scriptId}\"></script><script src=\"/assets/js/script1.js\"></script></body></html>";
 
         // Act
-        var files = sut.ParserFileForInternalLinks(htmlFileAsString);
+        var files = sut.ParserFileForInternalLinks(pageUri, htmlFileAsString);
 
         // Assert
         files.Should().NotBeNull();
