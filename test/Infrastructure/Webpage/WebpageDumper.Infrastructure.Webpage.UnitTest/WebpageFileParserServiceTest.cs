@@ -38,12 +38,12 @@ public class WebpageFileParserServiceTest
         files[0].Should().Be("assets/folder1/file1.jpg");
         files[1].Should().Be("assets/folder1/file2.jpg");
         files[2].Should().Be("assets/folder-2/file-3.jpg");
-        files[3].Should().Be("https://www.site.com/files/images/file4.png");
-        files[4].Should().Be("file5.tx");
-        files[5].Should().Be("assets/i/favicon.png");
-        files[6].Should().Be("assets/video/video1.mp4");
-        files[7].Should().Be("assets/js/lib/polyfills.js");
-        files[8].Should().Be($"assets/js/lib/common.js?{scriptId}");
-        files[9].Should().Be("assets/js/script1.js");
+        files[3].Should().Be("file5.txt");
+        files[4].Should().Be("assets/i/favicon.png");
+        files[5].Should().Be("assets/video/video1.mp4");
+        files[6].Should().Be("assets/js/lib/polyfills.js");
+        files[7].Should().Be($"assets/js/lib/common.js?{scriptId}");
+        files[8].Should().Be("assets/js/script1.js");
+        files[9].Should().Be("files/images/file4.png");
     }
 }
