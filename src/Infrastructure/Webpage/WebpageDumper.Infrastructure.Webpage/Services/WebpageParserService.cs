@@ -34,7 +34,7 @@ public class WebpageParserService : IWebpageParserService
         foundFiles.AddRange(GetRegExMatches(SrcRegex, fileAsString));
         foundFiles.AddRange(GetRegExMatches(ContentRegex, fileAsString));
 
-        return foundFiles.ToDtos();
+        return foundFiles.Distinct().ToList().ToDtos();
     }
 
     private List<String> GetRegExMatches(Regex regex, String fileAsString)
