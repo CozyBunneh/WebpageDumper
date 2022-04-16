@@ -6,7 +6,7 @@ using WebpageDumper.Infrastructure.Webpage.Extensions;
 
 namespace WebpageDumper.Infrastructure.Webpage.Services;
 
-public class WebpageFileParserService : IWebpageFileParserService
+public class WebpageParserService : IWebpageParserService
 {
     private static readonly Regex HrefRegex = new Regex("\\s+href\\=\"[\\/\\w\\d\\.\\-\\?\\:]*\"");
     private static readonly Regex SrcRegex = new Regex("\\s+src\\=\"[\\/\\w\\d\\.\\-\\?\\:]*\"");
@@ -15,16 +15,16 @@ public class WebpageFileParserService : IWebpageFileParserService
     private static readonly String Src = "src=";
     private static readonly String Content = "content=";
 
-    private ILogger<WebpageFileParserService> _logger;
+    private ILogger<WebpageParserService> _logger;
     private List<String> _leadingStringsToRemove;
 
-    public WebpageFileParserService(ILogger<WebpageFileParserService> logger)
+    public WebpageParserService(ILogger<WebpageParserService> logger)
     {
         _logger = logger;
         _leadingStringsToRemove = new List<String>() { Href, Src, Content };
     }
 
-    public IList<WebpageResource> ParserFileForInternalLinks(Uri pageUri, string fileAsString)
+    public IList<WebpageResource> ParseWebpageForResources(Uri pageUri, string fileAsString)
     {
         // Add the page uri since we want to trim this from the file results
         _leadingStringsToRemove.Add(pageUri.ToString());

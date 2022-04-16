@@ -12,7 +12,7 @@ public static class Injections
       this IServiceCollection services)
     {
         services.AddTransient<IWebService, WebService>();
-        services.AddTransient<IWebpageFileParserService, WebpageFileParserService>();
+        services.AddTransient<IWebpageParserService, WebpageParserService>();
         return services;
     }
 }
