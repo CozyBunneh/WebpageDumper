@@ -35,6 +35,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.Persistence.Configuration", "src\Infrastructure\Persistence\WebpageDumper.Infrastructure.Persistence.Configuration\WebpageDumper.Infrastructure.Persistence.Configuration.csproj", "{6DA0BD4B-F30F-4868-BA48-B0E18A9ADE53}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{91D653BD-46DC-41FA-81B2-D175C61A1704}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DF7C40BA-67C7-4155-9CBA-4E38799D4E36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Webpage", "Webpage", "{07489CAD-67AE-458F-8C4C-7F748CC285E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebpageDumper.Infrastructure.Webpage.UnitTest", "test\Infrastructure\Webpage\WebpageDumper.Infrastructure.Webpage.UnitTest\WebpageDumper.Infrastructure.Webpage.UnitTest.csproj", "{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +92,10 @@ Global
 		{6DA0BD4B-F30F-4868-BA48-B0E18A9ADE53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DA0BD4B-F30F-4868-BA48-B0E18A9ADE53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DA0BD4B-F30F-4868-BA48-B0E18A9ADE53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DEB43842-2CBF-48DC-ABFA-BE7381892904} = {1DF10C48-8B22-4748-9463-43B1F7356C3C}
@@ -101,5 +113,8 @@ Global
 		{C9669BB9-8976-49F3-8EDB-24AE12B4EFCA} = {0DE3881F-833C-41ED-9C8A-159F81E21E3C}
 		{EB7A6426-BFE0-4033-9F02-A1D2F932B0CF} = {0DE3881F-833C-41ED-9C8A-159F81E21E3C}
 		{6DA0BD4B-F30F-4868-BA48-B0E18A9ADE53} = {0DE3881F-833C-41ED-9C8A-159F81E21E3C}
+		{DF7C40BA-67C7-4155-9CBA-4E38799D4E36} = {91D653BD-46DC-41FA-81B2-D175C61A1704}
+		{07489CAD-67AE-458F-8C4C-7F748CC285E8} = {DF7C40BA-67C7-4155-9CBA-4E38799D4E36}
+		{8AB2DF9A-80A4-421B-9E51-33CD09F9FE16} = {07489CAD-67AE-458F-8C4C-7F748CC285E8}
 	EndGlobalSection
 EndGlobal
