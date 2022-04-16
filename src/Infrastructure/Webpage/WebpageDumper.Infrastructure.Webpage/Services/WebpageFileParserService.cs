@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using WebpageDumper.Infrastructure.Webpage.Abstract.Models;
 using WebpageDumper.Infrastructure.Webpage.Abstract.Services;
 using WebpageDumper.Infrastructure.Webpage.Extensions;
 
@@ -23,7 +24,7 @@ public class WebpageFileParserService : IWebpageFileParserService
         _leadingStringsToRemove = new List<String>() { Href, Src, Content };
     }
 
-    public IList<String> ParserFileForInternalLinks(Uri pageUri, string fileAsString)
+    public IList<WebpageResource> ParserFileForInternalLinks(Uri pageUri, string fileAsString)
     {
         // Add the page uri since we want to trim this from the file results
         _leadingStringsToRemove.Add(pageUri.ToString());
@@ -33,7 +34,7 @@ public class WebpageFileParserService : IWebpageFileParserService
         foundFiles.AddRange(GetRegExMatches(SrcRegex, fileAsString));
         foundFiles.AddRange(GetRegExMatches(ContentRegex, fileAsString));
 
-        return foundFiles;
+        return foundFiles.ToDtos();
     }
 
     private List<String> GetRegExMatches(Regex regex, String fileAsString)
