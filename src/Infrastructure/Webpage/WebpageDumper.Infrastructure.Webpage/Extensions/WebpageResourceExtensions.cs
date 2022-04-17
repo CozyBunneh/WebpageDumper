@@ -6,7 +6,9 @@ public static class WebpageResourceExtensions
 {
     public static List<WebpageResource> ToDtos(this List<string> httpResourceStrings)
     {
-        return httpResourceStrings.Select(httpResourceString => httpResourceString.ToDto()).ToList();
+        var dtos = httpResourceStrings.Select(httpResourceString => httpResourceString.ToDto()).ToList();
+        dtos.Sort();
+        return dtos;
     }
 
     public static WebpageResource ToDto(this string httpResourceString)
