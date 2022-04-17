@@ -42,11 +42,16 @@ public class WebpageDumperService : IWebpageDumperService
             return;
         }
 
+        DownloadWebpageResources(uri, numberOfThreads, webpageResources);
+    }
+
+    private async void DownloadWebpageResources(Uri uri, int numberOfThreads, IList<WebpageResource> webpageResources)
+    {
         Console.WriteLine($"Starting download of resources using {numberOfThreads} threads...");
 
         var options = new ProgressBarOptions
         {
-            ForegroundColor = ConsoleColor.Yellow,
+            ForegroundColor = ConsoleColor.Cyan,
             BackgroundColor = ConsoleColor.DarkGray,
             ProgressCharacter = '─'
         };
@@ -60,7 +65,7 @@ public class WebpageDumperService : IWebpageDumperService
             {
                 events[i] = new ManualResetEvent(false);
                 var webpageResource = webpageResources[i];
-                ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadCallbackAsync), new object[]
+                ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadFile), new object[]
                 {
                     _webService,
                     uri,
@@ -73,7 +78,7 @@ public class WebpageDumperService : IWebpageDumperService
         }
     }
 
-    public static void DownloadCallbackAsync(object? state)
+    public static void DownloadFile(object? state)
     {
         object[]? args = state as object[];
         if (args != null)
