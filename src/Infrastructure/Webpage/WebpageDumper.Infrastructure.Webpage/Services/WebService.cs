@@ -12,9 +12,7 @@ public class WebService : IWebService
     public WebService(ILogger<WebService> logger)
     {
         _logger = logger;
-
-        // One HttpClient per service instance to allow fo threading
-        _httpClient = new HttpClient();
+        _httpClient = GetNewHttpClient();
     }
 
     public Task<Stream> GetFileStreamAsync(Uri uri)
@@ -29,7 +27,8 @@ public class WebService : IWebService
 
     public Task<String> GetWebpageResourceAsStringAsync(Uri uri, WebpageResource webpageResource)
     {
-        return GetFileAsStringAsync(GetWebpageResourceUri(uri, webpageResource));
+        var httpClient = GetNewHttpClient();
+        return httpClient.GetStringAsync(GetWebpageResourceUri(uri, webpageResource));
     }
 
     private Uri GetWebpageResourceUri(Uri uri, WebpageResource webpageResource)
@@ -37,5 +36,10 @@ public class WebService : IWebService
         var uriBuilder = new UriBuilder(uri);
         uriBuilder.Path = $"/{webpageResource.path}/{webpageResource.fileName}";
         return uriBuilder.Uri;
+    }
+
+    private static HttpClient GetNewHttpClient()
+    {
+        return new HttpClient();
     }
 }

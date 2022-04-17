@@ -28,7 +28,7 @@ public class WebpageDumperService : IWebpageDumperService
         _fileService = fileService;
     }
 
-    public async Task DumpWebpage(Uri uri, int numberOfThreads = 4)
+    public async Task DumpWebpage(Uri uri, int numberOfThreads = 10)
     {
         var indexPageAsString = await GetWebpageIndex(uri);
         if (indexPageAsString == null || indexPageAsString == "")
@@ -47,16 +47,54 @@ public class WebpageDumperService : IWebpageDumperService
         var options = new ProgressBarOptions
         {
             ForegroundColor = ConsoleColor.Yellow,
-            BackgroundColor = ConsoleColor.DarkYellow,
+            BackgroundColor = ConsoleColor.DarkGray,
             ProgressCharacter = '─'
         };
 
-        using (var progressBar = new ProgressBar(webpageResources.Count, $"Downloading resources from: {uri.ToString()}", options))
+        var numberOfTasks = webpageResources.Count;
+        using (var progressBar = new ProgressBar(numberOfTasks, $"Downloading resources from: {uri.ToString()}", options))
         {
-            foreach (var webpageResource in webpageResources)
+            var events = new ManualResetEvent[numberOfTasks];
+            ThreadPool.SetMaxThreads(numberOfThreads, numberOfThreads);
+            for (int i = 0; i < numberOfTasks; i++)
             {
-                await _webService.GetWebpageResourceAsStringAsync(uri, webpageResource);
+                events[i] = new ManualResetEvent(false);
+                var webpageResource = webpageResources[i];
+                ThreadPool.QueueUserWorkItem(new WaitCallback(DownloadCallbackAsync), new object[]
+                {
+                    _webService,
+                    uri,
+                    webpageResource,
+                    progressBar,
+                    events[i]
+                });
+            }
+            WaitHandle.WaitAll(events);
+        }
+    }
+
+    public static void DownloadCallbackAsync(object? state)
+    {
+        object[]? args = state as object[];
+        if (args != null)
+        {
+            IWebService? webService = args[0] as IWebService;
+            Uri? uri = args[1] as Uri;
+            WebpageResource? webpageResource = args[2] as WebpageResource;
+            ProgressBar? progressBar = args[3] as ProgressBar;
+            // var event = args [4];
+            // ManualResetEvent? event = args[4] as ManualResetEvent;
+
+
+            if (webService != null
+                && uri != null
+                && webpageResource != null
+                && progressBar != null
+                && args[4] != null)
+            {
+                webService.GetWebpageResourceAsStringAsync(uri, webpageResource).Wait();
                 progressBar.Tick();
+                (args[4] as ManualResetEvent).Set();
             }
         }
     }
