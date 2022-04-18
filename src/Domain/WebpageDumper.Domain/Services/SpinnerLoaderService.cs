@@ -34,11 +34,11 @@ public class SpinnerLoaderService : ISpinnerLoaderService
     {
         var indexPageAsString = "";
         await Spinner.StartAsync(FetchingIndex, async spinner =>
-        {
-            spinner.Color = Color;
-            indexPageAsString = await _webService.GetFileAsStringAsync(uri);
-            spinner.Text = GetWebpageIndexResultText(uri, indexPageAsString);
-        }, PrimaryPattern, FallbackPattern);
+                {
+                    spinner.Color = Color;
+                    indexPageAsString = await _webService.GetFileAsStringAsync(uri);
+                    spinner.Text = GetWebpageIndexResultText(uri, indexPageAsString);
+                }, PrimaryPattern, FallbackPattern);
         return indexPageAsString;
     }
 

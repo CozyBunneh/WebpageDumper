@@ -4,18 +4,11 @@ namespace WebpageDumper.Infrastructure.Persistence.Services;
 
 public class FileService : IFileService
 {
-    private const String DefaultOutputDirectory = "output";
-
     private ILogger<FileService> _logger;
 
     public FileService(ILogger<FileService> logger)
     {
         _logger = logger;
-    }
-
-    public void CreateDirectory(string path)
-    {
-        Directory.CreateDirectory(path);
     }
 
     public Task WriteFile(Stream fileData, string fileName)
@@ -33,27 +26,27 @@ public class FileService : IFileService
     }
 
     public async Task WriteFileToPathAsync(
+        string outputDir,
         Task<Stream> fileData,
         string fileName,
-        string? path = null,
-        string outputDir = DefaultOutputDirectory)
+        string? path = null)
     {
-        await WriteFileToPath(await fileData, fileName, path, outputDir);
+        await WriteFileToPath(outputDir, await fileData, fileName, path);
     }
 
     public Task WriteFileToPath(
+        string outputDir,
         Stream fileData,
         string fileName,
-        string? path = null,
-        string outputDir = DefaultOutputDirectory)
+        string? path = null)
     {
-        var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(fileName, outputDir, path);
+        var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(outputDir, fileName, path);
         return WriteFile(fileData, fileNameWithFullPath);
     }
 
     private String CreateDirectoryAndReturnFullFilenamePath(
-        string fileName,
         string outputDir,
+        string fileName,
         string? path = null)
     {
         if (!String.IsNullOrEmpty(path))
@@ -68,5 +61,10 @@ public class FileService : IFileService
         }
 
         return fileName;
+    }
+
+    private void CreateDirectory(string path)
+    {
+        Directory.CreateDirectory(path);
     }
 }
