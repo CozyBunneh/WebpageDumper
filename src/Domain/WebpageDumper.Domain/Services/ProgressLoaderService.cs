@@ -14,7 +14,7 @@ public class ProgressLoaderService : IProgressLoaderService
     private const String StartingDownloadOfResourcesUsing = "Starting download of resources using ";
     private const String ThreadsToOutput = " threads to the output folder: ";
     private const String DownloadingResourcesFrom = "Downloading resources from: ";
-    private const ConsoleColor ForegroundColor = ConsoleColor.Cyan;
+    private const ConsoleColor ForegroundColor = ConsoleColor.Magenta;
     private const ConsoleColor BackgroundColor = ConsoleColor.DarkGray;
     private const Char ProgressCharacter = '─';
 
