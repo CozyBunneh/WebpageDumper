@@ -1,4 +1,5 @@
 using ShellProgressBar;
+using WebpageDumper.Domain.Abstract.Commands;
 using WebpageDumper.Infrastructure.Persistence.Services;
 using WebpageDumper.Infrastructure.Webpage.Abstract.Models;
 using WebpageDumper.Infrastructure.Webpage.Abstract.Service;
@@ -14,21 +15,35 @@ public static class DownloadTask
         {
             IWebService? webService = args[0] as IWebService;
             IFileService? fileService = args[1] as IFileService;
-            Uri? uri = args[2] as Uri;
-            WebpageResource? webpageResource = args[3] as WebpageResource;
-            ProgressBar? progressBar = args[4] as ProgressBar;
+            IList<WebpageResource>? failedWebpageResources = args[2] as IList<WebpageResource>;
+            DownloadWebpageCommand? command = args[3] as DownloadWebpageCommand;
+            WebpageResource? webpageResource = args[4] as WebpageResource;
+            ProgressBar? progressBar = args[5] as ProgressBar;
+            ManualResetEvent? myEvent = (ManualResetEvent)args[6];
 
             if (webService != null
                 && fileService != null
-                && uri != null
+                && failedWebpageResources != null
+                && command != null
                 && webpageResource != null
                 && progressBar != null
-                && args[5] != null)
+                && myEvent != null)
             {
-                Task<Stream> fileStream = webService.GetWebpageResourceAsStreamAsync(uri, webpageResource);
-                fileService.WriteFileToPathAsync(fileStream, webpageResource.fileName, webpageResource.path).Wait();
+                Task<Stream> fileStream = webService.GetWebpageResourceAsStreamAsync(command.uri, webpageResource);
+                try
+                {
+                    fileService.WriteFileToPathAsync(
+                                        command.output,
+                                        fileStream,
+                                        webpageResource.fileName,
+                                        webpageResource.path).Wait();
+                }
+                catch (AggregateException)
+                {
+                    failedWebpageResources.Add(webpageResource);
+                }
                 progressBar.Tick();
-                (args[5] as ManualResetEvent).Set();
+                myEvent.Set();
             }
         }
     }

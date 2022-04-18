@@ -1,6 +1,8 @@
+using WebpageDumper.Domain.Abstract.Commands;
+
 namespace WebpageDumper.Domain.Abstract.Services;
 
 public interface IWebpageDumperService
 {
-    Task DumpWebpage(Uri uri, int numberOfThreads = 4);
+    Task DumpWebpage(DownloadWebpageCommand command);
 }

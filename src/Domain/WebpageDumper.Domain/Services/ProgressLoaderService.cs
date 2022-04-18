@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using ShellProgressBar;
+using WebpageDumper.Domain.Abstract.Commands;
 using WebpageDumper.Domain.Abstract.Services;
 using WebpageDumper.Domain.Services.Tasks;
 using WebpageDumper.Infrastructure.Persistence.Services;
@@ -11,11 +12,11 @@ namespace WebpageDumper.Domain.Services;
 public class ProgressLoaderService : IProgressLoaderService
 {
     private const String StartingDownloadOfResourcesUsing = "Starting download of resources using ";
-    private const String Threads = " threads...";
+    private const String ThreadsToOutput = " threads to the output folder: ";
     private const String DownloadingResourcesFrom = "Downloading resources from: ";
     private const ConsoleColor ForegroundColor = ConsoleColor.Cyan;
     private const ConsoleColor BackgroundColor = ConsoleColor.DarkGray;
-    private const Char ProgressCharacter = '-';
+    private const Char ProgressCharacter = '─';
 
     private ILogger<ProgressLoaderService> _logger;
     private IWebService _webService;
@@ -31,9 +32,11 @@ public class ProgressLoaderService : IProgressLoaderService
         _fileService = fileService;
     }
 
-    public async Task DownloadWebpageResources(Uri uri, int numberOfThreads, IList<WebpageResource> webpageResources)
+    public void DownloadWebpageResources(
+        DownloadWebpageCommand command,
+        IList<WebpageResource> webpageResources)
     {
-        Console.WriteLine($"{StartingDownloadOfResourcesUsing}{numberOfThreads}{Threads}");
+        Console.WriteLine($"{StartingDownloadOfResourcesUsing}{command.numberOfThreads}{ThreadsToOutput}{command.output}");
 
         var options = new ProgressBarOptions
         {
@@ -42,38 +45,52 @@ public class ProgressLoaderService : IProgressLoaderService
             ProgressCharacter = ProgressCharacter
         };
 
+        var failedWebpageResources = new List<WebpageResource>();
         using (var progressBar = new ProgressBar(
             webpageResources.Count,
-            $"{DownloadingResourcesFrom}{uri.ToString()}",
+            $"{DownloadingResourcesFrom}{command.uri.ToString()}",
             options))
         {
             RunAllDownloadThreads(
-                uri,
+                command,
+                failedWebpageResources,
                 webpageResources,
-                numberOfThreads,
                 webpageResources.Count,
                 progressBar);
+        }
+        if (failedWebpageResources.Count > 0)
+        {
+            Console.WriteLine("Unable to download the files:");
+            foreach (var failedWebpageResource in failedWebpageResources)
+            {
+                Console.WriteLine($"\t{failedWebpageResource.path}/{failedWebpageResource.fileName}");
+            }
         }
     }
 
     private void RunAllDownloadThreads(
-        Uri uri,
+        DownloadWebpageCommand command,
+        IList<WebpageResource> failedWebpageResources,
         IList<WebpageResource> webpageResources,
-        int numberOfThreads,
         int numberOfTasks,
         ProgressBar progressBar)
     {
         var events = new ManualResetEvent[numberOfTasks];
-        ThreadPool.SetMaxThreads(numberOfThreads, numberOfThreads);
+        ThreadPool.SetMaxThreads(command.numberOfThreads, command.numberOfThreads);
         for (int i = 0; i < numberOfTasks; i++)
         {
-            events[i] = QueueDownloadThreadForWebpageResource(uri, webpageResources[i], progressBar);
+            events[i] = QueueDownloadThreadForWebpageResource(
+                command,
+                failedWebpageResources,
+                webpageResources[i],
+                progressBar);
         }
         WaitHandle.WaitAll(events);
     }
 
     private ManualResetEvent QueueDownloadThreadForWebpageResource(
-        Uri uri,
+        DownloadWebpageCommand command,
+        IList<WebpageResource> failedWebpageResources,
         WebpageResource webpageResource,
         ProgressBar progressBar)
     {
@@ -81,7 +98,8 @@ public class ProgressLoaderService : IProgressLoaderService
         ThreadPool.QueueUserWorkItem(
             new WaitCallback(DownloadTask.DownloadFileAsync),
             GetDownloadThreadObjectArray(
-                uri,
+                command,
+                failedWebpageResources,
                 webpageResource,
                 progressBar,
                 myEvent));
@@ -89,7 +107,8 @@ public class ProgressLoaderService : IProgressLoaderService
     }
 
     private object[] GetDownloadThreadObjectArray(
-        Uri uri,
+        DownloadWebpageCommand command,
+        IList<WebpageResource> failedWebpageResources,
         WebpageResource webpageResource,
         ProgressBar progressBar,
         ManualResetEvent myEvent)
@@ -98,7 +117,8 @@ public class ProgressLoaderService : IProgressLoaderService
         {
             _webService,
             _fileService,
-            uri,
+            failedWebpageResources,
+            command,
             webpageResource,
             progressBar,
             myEvent
