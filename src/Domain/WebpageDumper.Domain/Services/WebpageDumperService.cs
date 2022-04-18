@@ -8,6 +8,8 @@ namespace WebpageDumper.Domain.Services;
 public class WebpageDumperService : IWebpageDumperService
 {
     private const String Www = "www";
+    private const String UnableToGetFromAddress = "Unable to get index.html from the provided address.";
+
     private ILogger<WebpageDumperService> _logger;
     private ISpinnerLoaderService _spinnerLoaderService;
     private IProgressLoaderService _progressLoaderService;
@@ -43,7 +45,7 @@ public class WebpageDumperService : IWebpageDumperService
             webpageResources);
     }
 
-    private Task<String> GetWebpageIndexAsString(DownloadWebpageCommand command)
+    private Task<String> GetWebpageIndexAsString(DownloadWebpageCommand command, bool lastTry = false)
     {
         try
         {
@@ -52,8 +54,21 @@ public class WebpageDumperService : IWebpageDumperService
         catch (AggregateException)
         {
             command = ChangeUriToBeWithOrWithoutWww(command);
-            return _spinnerLoaderService.GetWebpageIndex(command.uri);
+            if (!lastTry)
+            {
+                return GetWebpageIndexAsString(command, true);
+            }
+            else
+            {
+                return CouldNotGetIndexAsString();
+            }
         }
+    }
+
+    private Task<String> CouldNotGetIndexAsString()
+    {
+        Console.WriteLine(UnableToGetFromAddress);
+        return (Task<String>)Task.CompletedTask;
     }
 
     private DownloadWebpageCommand ChangeUriToBeWithOrWithoutWww(DownloadWebpageCommand command)
