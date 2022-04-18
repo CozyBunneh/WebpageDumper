@@ -15,6 +15,7 @@ public class SpinnerLoaderService : ISpinnerLoaderService
     private const String IndexPageFailure = "Unable to get index page from: ";
     private const String ResourcesFound = " resources found.";
     private const String NoResourcesFound = "No resources where found.";
+    private const String UnableToGetFromAddress = "Unable to get index.html from the provided address.";
     private const ConsoleColor Color = ConsoleColor.Cyan;
     private static readonly Pattern PrimaryPattern = Patterns.Dots12;
     private static readonly Pattern FallbackPattern = Patterns.Flip;
@@ -34,11 +35,20 @@ public class SpinnerLoaderService : ISpinnerLoaderService
     {
         var indexPageAsString = "";
         await Spinner.StartAsync(FetchingIndex, async spinner =>
-                {
-                    spinner.Color = Color;
-                    indexPageAsString = await _webService.GetFileAsStringAsync(uri);
-                    spinner.Text = GetWebpageIndexResultText(uri, indexPageAsString);
-                }, PrimaryPattern, FallbackPattern);
+        {
+            spinner.Color = Color;
+
+            try
+            {
+                indexPageAsString = await _webService.GetFileAsStringAsync(uri);
+            }
+            catch (HttpRequestException)
+            {
+                spinner.Fail(UnableToGetFromAddress);
+            }
+
+            spinner.Text = GetWebpageIndexResultText(uri, indexPageAsString);
+        }, PrimaryPattern, FallbackPattern);
         return indexPageAsString;
     }
 
@@ -57,8 +67,8 @@ public class SpinnerLoaderService : ISpinnerLoaderService
     private String GetWebpageIndexResultText(Uri uri, String indexPageAsString)
     {
         return indexPageAsString != "" ?
-            $"{IndexPageFound}{uri.ToString()}." :
-            $"{IndexPageFailure}{uri.ToString()}.";
+            $"{IndexPageFound}{uri.ToString()}" :
+            $"{IndexPageFailure}{uri.ToString()}";
     }
 
     private String GetWebpageIndexAndWebresourceLinksResultText(Uri uri, String indexPageAsString, IList<WebpageResource> webpageResources)
