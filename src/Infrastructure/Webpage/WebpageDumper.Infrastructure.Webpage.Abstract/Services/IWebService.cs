@@ -6,5 +6,5 @@ public interface IWebService
 {
     Task<Stream> GetFileStreamAsync(Uri uri);
     Task<String> GetFileAsStringAsync(Uri uri);
-    Task<String> GetWebpageResourceAsStringAsync(Uri uri, WebpageResource webpageResource);
+    Task<Stream> GetWebpageResourceAsStreamAsync(Uri uri, WebpageResource webpageResource);
 }

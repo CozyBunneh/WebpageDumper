@@ -2,7 +2,11 @@ namespace WebpageDumper.Infrastructure.Webpage.Extensions;
 
 public static class StringExtensions
 {
-    public static String SanitizeHttpResourceString(this String httpResourceString, List<String> leadingStringsToRemove)
+    private const String Http = "http";
+
+    public static String SanitizeHttpResourceString(
+        this String httpResourceString,
+        List<String> leadingStringsToRemove)
     {
         httpResourceString = httpResourceString.Trim();
 
@@ -16,6 +20,12 @@ public static class StringExtensions
 
     public static bool IsFile(this String httpResourceString)
     {
+        // If a resource starts with http after the parsing then it's not a local resource file.
+        if (httpResourceString.StartsWith(Http))
+        {
+            return false;
+        }
+
         var lastPartOfMatch = GetFileNameOfHttpResourceString(httpResourceString);
         return lastPartOfMatch.Contains('.');
     }
