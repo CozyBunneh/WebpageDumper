@@ -25,10 +25,10 @@ public class WebService : IWebService
         return _httpClient.GetStringAsync(uri);
     }
 
-    public Task<String> GetWebpageResourceAsStringAsync(Uri uri, WebpageResource webpageResource)
+    public Task<Stream> GetWebpageResourceAsStreamAsync(Uri uri, WebpageResource webpageResource)
     {
         var httpClient = GetNewHttpClient();
-        return httpClient.GetStringAsync(GetWebpageResourceUri(uri, webpageResource));
+        return httpClient.GetStreamAsync(GetWebpageResourceUri(uri, webpageResource));
     }
 
     private Uri GetWebpageResourceUri(Uri uri, WebpageResource webpageResource)

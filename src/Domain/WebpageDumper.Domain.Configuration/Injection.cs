@@ -10,6 +10,8 @@ public static class Injections
       this IServiceCollection services)
     {
         services.AddTransient<IWebpageDumperService, WebpageDumperService>();
+        services.AddTransient<ISpinnerLoaderService, SpinnerLoaderService>();
+        services.AddTransient<IProgressLoaderService, ProgressLoaderService>();
 
         return services;
     }

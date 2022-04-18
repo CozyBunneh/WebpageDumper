@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../Infrastructure/Webpage/WebpageDumper.Infrastructure.Webpage.Abstract/WebpageDumper.Infrastructure.Webpage.Abstract.csproj" />
+  </ItemGroup>
+
 </Project>
