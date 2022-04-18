@@ -16,6 +16,7 @@ public class WebpageParserService : IWebpageParserService
     private const String Content = "content=";
     private const String Www = "www";
     private const String IndexHtml = "index.html";
+    private const String ColonSlashSlash = "://";
 
     private ILogger<WebpageParserService> _logger;
     private List<String> _leadingStringsToRemove;
@@ -41,13 +42,31 @@ public class WebpageParserService : IWebpageParserService
 
     private void AddWebpageUriToLeadingStringsToRemoveFromFileResourcePaths(Uri pageUri)
     {
-        _leadingStringsToRemove.Add(pageUri.ToString());
         if (!IsWwwInUri(pageUri))
         {
-            string wwwPageUri = $"{pageUri.Scheme}://{Www}.{pageUri.Host}";
+            string wwwPageUri = GetWebpageHostWithWww(pageUri);
+            _leadingStringsToRemove.Add($"{pageUri.Scheme}{ColonSlashSlash}{wwwPageUri}");
             _leadingStringsToRemove.Add(wwwPageUri);
+            AddProvidedWebpageUriToStringsToRemoveFromFileResourcePaths(pageUri);
         }
+        else
+        {
+            AddProvidedWebpageUriToStringsToRemoveFromFileResourcePaths(pageUri);
+            var hostWithoutWww = GetWebpageHostWithoutWww(pageUri);
+            _leadingStringsToRemove.Add($"{pageUri.Scheme}{ColonSlashSlash}{hostWithoutWww}");
+            _leadingStringsToRemove.Add(hostWithoutWww);
+        }
+
     }
+
+    private void AddProvidedWebpageUriToStringsToRemoveFromFileResourcePaths(Uri pageUri)
+    {
+        _leadingStringsToRemove.Add(pageUri.ToString());
+        _leadingStringsToRemove.Add($"{pageUri.Host}");
+    }
+
+    private String GetWebpageHostWithWww(Uri pageUri) => $"{Www}.{pageUri.Host}";
+    private String GetWebpageHostWithoutWww(Uri pageUri) => pageUri.Host.Replace(Www, "");
 
     private List<String> GetRegExMatches(Regex regex, String fileAsString)
     {

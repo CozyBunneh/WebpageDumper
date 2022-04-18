@@ -3,6 +3,7 @@ namespace WebpageDumper.Infrastructure.Webpage.Extensions;
 public static class StringExtensions
 {
     private const String Http = "http";
+    private const String Www = "www";
 
     public static String SanitizeHttpResourceString(
         this String httpResourceString,
@@ -15,13 +16,13 @@ public static class StringExtensions
             httpResourceString = httpResourceString.Replace(leadingStringToRemove, "");
         }
 
-        return httpResourceString.RemoveQuotationMarks().TrimLeadingFrontSlash();
+        return httpResourceString.RemoveQuotationMarks().TrimAllLeadingFrontSlashes();
     }
 
     public static bool IsFile(this String httpResourceString)
     {
-        // If a resource starts with http after the parsing then it's not a local resource file.
-        if (httpResourceString.StartsWith(Http))
+        // If a resource starts with http or www after the parsing then it's not a local resource file.
+        if (httpResourceString.StartsWith(Http) || httpResourceString.StartsWith(Www))
         {
             return false;
         }
@@ -33,6 +34,16 @@ public static class StringExtensions
     public static String RemoveQuotationMarks(this String httpResourceString)
     {
         return httpResourceString.Replace("\"", "");
+    }
+
+    public static String TrimAllLeadingFrontSlashes(this String httpResourceString)
+    {
+        while (httpResourceString.IndexOf('/') == 0)
+        {
+            httpResourceString = httpResourceString.TrimLeadingFrontSlash();
+        }
+
+        return httpResourceString;
     }
 
     public static String TrimLeadingFrontSlash(this String httpResourceString)
