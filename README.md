@@ -11,6 +11,13 @@ The project architecture is a DDD one with dependency injection and inversion of
 brew install dotnet
 ```
 
+## Building
+
+```sh
+dotnet restore
+dotnet build
+```
+
 ## Running
 
 ### Cli with dotnet command
