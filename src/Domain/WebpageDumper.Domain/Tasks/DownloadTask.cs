@@ -30,14 +30,13 @@ public static class DownloadTask
                 && progressBar != null
                 && myEvent != null)
             {
-                Task<Stream> fileStream = webService.GetWebpageResourceAsStreamAsync(command.uri, webpageResource);
                 try
                 {
-                    storageService.WriteFileToPathAsync(
-                        command.output,
-                        fileStream,
-                        webpageResource.fileName,
-                        webpageResource.path).Wait();
+                    DownloadFile(
+                        webService,
+                        storageService,
+                        command,
+                        webpageResource);
                 }
                 catch (AggregateException)
                 {
@@ -48,5 +47,58 @@ public static class DownloadTask
                 myEvent.Set();
             }
         }
+    }
+
+    private static void DownloadFile(
+        IWebService webService,
+        IStorageService storageService,
+        DownloadWebpageCommand command,
+        WebpageResource webpageResource
+    )
+    {
+        if (webpageResource.IsTextFile())
+        {
+            DownloadFileAsStringFile(
+                webService,
+                storageService,
+                command,
+                webpageResource);
+        }
+        else
+        {
+            DownloadFileAsStreamFile(
+                webService,
+                storageService,
+                command,
+                webpageResource);
+        }
+    }
+
+    private static void DownloadFileAsStreamFile(
+        IWebService webService,
+        IStorageService storageService,
+        DownloadWebpageCommand command,
+        WebpageResource webpageResource)
+    {
+        Task<Stream> fileStream = webService.GetWebpageResourceAsStreamAsync(command.uri, webpageResource);
+        storageService.WriteFileToPathAsync(
+                                command.output,
+                                fileStream,
+                                webpageResource.fileName,
+                                webpageResource.path).Wait();
+    }
+
+    private static void DownloadFileAsStringFile(
+        IWebService webService,
+        IStorageService storageService,
+        DownloadWebpageCommand command,
+        WebpageResource webpageResource)
+    {
+        Task<String> fileString = webService.GetWebpageResourceAsStringAsync(command.uri, webpageResource);
+        storageService.WriteFileAsStringToPathAsync(
+                        command.output,
+                        fileString,
+                        webpageResource.fileName,
+                        webpageResource.path).Wait();
     }
 }
