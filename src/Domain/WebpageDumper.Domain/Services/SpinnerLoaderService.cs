@@ -31,6 +31,11 @@ public class SpinnerLoaderService : ISpinnerLoaderService
         _webpageParserService = webpageParserService;
     }
 
+    /// <summary>
+    ///     Displays a loading spinner while fetching a webpages index.html as a string.
+    /// </summary>
+    /// <param name="uri"></param>
+    /// <returns></returns>
     public async Task<String> GetWebpageIndex(Uri uri)
     {
         var indexPageAsString = "";
@@ -44,6 +49,8 @@ public class SpinnerLoaderService : ISpinnerLoaderService
             }
             catch (HttpRequestException)
             {
+                // If a 303 or the like is received handle it as a complete failure and that the
+                // webpage cannot be parsed.
                 spinner.Fail(UnableToGetFromAddress);
             }
 
@@ -52,6 +59,13 @@ public class SpinnerLoaderService : ISpinnerLoaderService
         return indexPageAsString;
     }
 
+    /// <summary>
+    ///     Spinner shown while parsing an index.html file for webresources/files that are to be
+    ///     downloaded from the server.
+    /// </summary>
+    /// <param name="uri"></param>
+    /// <param name="indexPageAsString"></param>
+    /// <returns></returns>
     public IList<WebpageResource> GetWebresourcesLinksFromIndexPage(Uri uri, String indexPageAsString)
     {
         IList<WebpageResource> webpageResources = new List<WebpageResource>();
@@ -64,6 +78,12 @@ public class SpinnerLoaderService : ISpinnerLoaderService
         return webpageResources;
     }
 
+    /// <summary>
+    ///     Get a success or failure string to display for the get index.html task.
+    /// </summary>
+    /// <param name="uri"></param>
+    /// <param name="indexPageAsString"></param>
+    /// <returns></returns>
     private String GetWebpageIndexResultText(Uri uri, String indexPageAsString)
     {
         return indexPageAsString != "" ?
@@ -71,6 +91,13 @@ public class SpinnerLoaderService : ISpinnerLoaderService
             $"{IndexPageFailure}{uri.ToString()}";
     }
 
+    /// <summary>
+    ///     Get a success or failure string to be displayed for the parsing of the index.html task.
+    /// </summary>
+    /// <param name="uri"></param>
+    /// <param name="indexPageAsString"></param>
+    /// <param name="webpageResources"></param>
+    /// <returns></returns>
     private String GetWebpageIndexAndWebresourceLinksResultText(Uri uri, String indexPageAsString, IList<WebpageResource> webpageResources)
     {
         return webpageResources.Count > 0 ?

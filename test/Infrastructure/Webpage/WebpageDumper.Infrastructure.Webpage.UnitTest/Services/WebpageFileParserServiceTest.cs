@@ -5,7 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using WebpageDumper.Infrastructure.Webpage.Services;
 
-namespace WebpageDumper.Infrastructure.Webpage.UnitTest;
+namespace WebpageDumper.Infrastructure.Webpage.UnitTest.Services;
 
 [TestFixture]
 public class WebpageFileParserServiceTest
@@ -34,7 +34,7 @@ public class WebpageFileParserServiceTest
         // Assert
         files.Should().NotBeNull();
         files.Should().NotBeEmpty();
-        files.Count.Should().Be(10);
+        files.Count.Should().Be(11);
         files[0].fileName.Should().Be("video1.mp4");
         files[0].path.Should().Be("assets/video");
         files[1].fileName.Should().Be($"common.js?{scriptId}");
@@ -51,9 +51,11 @@ public class WebpageFileParserServiceTest
         files[6].path.Should().Be("files/images");
         files[7].fileName.Should().Be("file5.txt");
         files[7].path.Should().Be("");
-        files[8].fileName.Should().Be("polyfills.js");
-        files[8].path.Should().Be("assets/js/lib");
-        files[9].fileName.Should().Be("script1.js");
-        files[9].path.Should().Be("assets/js");
+        files[8].fileName.Should().Be("index.html");
+        files[8].path.Should().Be("");
+        files[9].fileName.Should().Be("polyfills.js");
+        files[9].path.Should().Be("assets/js/lib");
+        files[10].fileName.Should().Be("script1.js");
+        files[10].path.Should().Be("assets/js");
     }
 }

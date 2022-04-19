@@ -24,6 +24,12 @@ public class WebpageDumperService : IWebpageDumperService
         _progressLoaderService = progressLoaderService;
     }
 
+    /// <summary>
+    ///     Main function for dumping webpages, first it fetches the index.html as a string,
+    ///     parses it for files on the server and later downloads them all in a threaded manner.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
     public async Task DumpWebpage(DownloadWebpageCommand command)
     {
         var indexPageAsString = await GetWebpageIndexAsString(command);
@@ -45,13 +51,19 @@ public class WebpageDumperService : IWebpageDumperService
             webpageResources);
     }
 
+    /// <summary>
+    ///     Method that fetches a webpage as string so that it can be parsed.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="lastTry">Only do one recursive retry, no infinite looping</param>
+    /// <returns></returns>
     private Task<String> GetWebpageIndexAsString(DownloadWebpageCommand command, bool lastTry = false)
     {
         try
         {
             return _spinnerLoaderService.GetWebpageIndex(command.uri);
         }
-        catch (AggregateException)
+        catch (AggregateException) // Received on 404 errors, for google.com a retry with www.google.com is performed or vice versa.ß
         {
             command = ChangeUriToBeWithOrWithoutWww(command);
             if (!lastTry)
@@ -65,12 +77,22 @@ public class WebpageDumperService : IWebpageDumperService
         }
     }
 
+    /// <summary>
+    ///     Write error message to console.
+    /// </summary>
+    /// <returns></returns>
     private Task<String> CouldNotGetIndexAsString()
     {
         Console.WriteLine(UnableToGetFromAddress);
         return (Task<String>)Task.CompletedTask;
     }
 
+    /// <summary>
+    ///     Simple method that fo instance adds www to google.com resulting in www.google.com,
+    ///     or if www was present removes it.ß
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
     private DownloadWebpageCommand ChangeUriToBeWithOrWithoutWww(DownloadWebpageCommand command)
     {
         Uri newUri;

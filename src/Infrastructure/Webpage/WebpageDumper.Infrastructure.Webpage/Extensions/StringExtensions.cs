@@ -5,6 +5,13 @@ public static class StringExtensions
     private const String Http = "http";
     private const String Www = "www";
 
+    /// <summary>
+    ///     Remove any leading or trailing parts from a http resource string so that only the
+    ///     actual path to the file and it's name is left.
+    /// </summary>
+    /// <param name="httpResourceString"></param>
+    /// <param name="leadingStringsToRemove"></param>
+    /// <returns></returns>
     public static String SanitizeHttpResourceString(
         this String httpResourceString,
         List<String> leadingStringsToRemove)

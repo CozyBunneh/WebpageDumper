@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../../src/Infrastructure/Webpage/WebpageDumper.Infrastructure.Webpage/WebpageDumper.Infrastructure.Webpage.csproj" />
+    <ProjectReference Include="../../../src/Domain/WebpageDumper.Domain/WebpageDumper.Domain.csproj" />
   </ItemGroup>
 
 </Project>
