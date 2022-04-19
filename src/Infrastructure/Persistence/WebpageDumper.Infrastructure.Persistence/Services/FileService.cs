@@ -11,20 +11,6 @@ public class FileService : IStorageService
         _logger = logger;
     }
 
-    public Task WriteFile(Stream fileData, string fileName)
-    {
-        try
-        {
-            var fs = new FileStream(fileName, FileMode.CreateNew);
-            return fileData.CopyToAsync(fs);
-        }
-        catch (IOException)
-        {
-            // Simply ignore the error since this means that the file already exists.
-            return Task.CompletedTask;
-        }
-    }
-
     /// <summary>
     ///     Pipe a file stream task to a file writer in an asynchronous manner.
     /// </summary>
@@ -39,25 +25,60 @@ public class FileService : IStorageService
         string fileName,
         string? path = null)
     {
-        await WriteFileToPath(output, await fileData, fileName, path);
+        var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(output, fileName, path);
+        await WriteFileAsync(await fileData, fileNameWithFullPath);
     }
 
-    /// <summary>
-    ///     Write an already synchronously fetched file stream to a file.
-    /// </summary>
-    /// <param name="output"></param>
-    /// <param name="fileData"></param>
-    /// <param name="fileName"></param>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    public Task WriteFileToPath(
+    public async Task WriteFileAsStringToPathAsync(
         string output,
-        Stream fileData,
+        Task<String> fileData,
         string fileName,
         string? path = null)
     {
         var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(output, fileName, path);
-        return WriteFile(fileData, fileNameWithFullPath);
+        String file = await fileData;
+        WriteFileAsString(file, fileNameWithFullPath);
+    }
+
+    private Task WriteFileAsync(Stream fileData, string fileName)
+    {
+        try
+        {
+            var fs = new FileStream(fileName, FileMode.CreateNew);
+            return fileData.CopyToAsync(fs);
+        }
+        catch (IOException)
+        {
+            // Simply ignore the error since this means that the file already exists.
+            return Task.CompletedTask;
+        }
+    }
+
+    private void WriteFile(Stream fileData, string fileName)
+    {
+        try
+        {
+            var fs = new FileStream(fileName, FileMode.CreateNew);
+            fileData.CopyToAsync(fs);
+        }
+        catch (IOException)
+        {
+            // Simply ignore the error since this means that the file already exists.
+        }
+    }
+
+    private void WriteFileAsString(String fileData, string fileName)
+    {
+        try
+        {
+            var fileWriter = new System.IO.StreamWriter(fileName);
+            fileWriter.WriteLine(fileData);
+            fileWriter.Dispose();
+        }
+        catch (IOException)
+        {
+            // Simply ignore the error since this means that the file already exists.
+        }
     }
 
     private String CreateDirectoryAndReturnFullFilenamePath(

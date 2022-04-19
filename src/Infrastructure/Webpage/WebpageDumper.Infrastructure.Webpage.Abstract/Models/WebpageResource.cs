@@ -35,6 +35,40 @@ public record WebpageResource(String fileName, String path) : IComparable<Webpag
         "wmv"
     };
 
+    private static readonly string[] CommonTextFileExtensions =
+    {
+        "1st",
+        "asp",
+        "csv",
+        "htm",
+        "html",
+        "log",
+        "lrc",
+        "lst",
+        "md",
+        "nfo",
+        "opml",
+        "plist",
+        "rtf",
+        "srt",
+        "sub",
+        "tbl",
+        "text",
+        "txt",
+        "xml",
+        "xmlp",
+        "xmp",
+        "xsl",
+        "xslt",
+        "js",
+        "ts",
+        "css",
+        "scss",
+        "svg",
+    };
+
+    public bool IsTextFile() => CommonTextFileExtensions.Contains(GetFileExtension());
+
     public int CompareTo(WebpageResource? other)
     {
         if (other == null)
