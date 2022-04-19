@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Extensions.Logging;
 using WebpageDumper.Infrastructure.Webpage.Abstract.Models;
 using WebpageDumper.Infrastructure.Webpage.Abstract.Service;
@@ -12,7 +13,12 @@ public class WebService : IWebService
     public WebService(ILogger<WebService> logger)
     {
         _logger = logger;
-        _httpClient = new HttpClient();
+
+        HttpClientHandler handler = new HttpClientHandler()
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        };
+        _httpClient = new HttpClient(handler);
     }
 
     public Task<Stream> GetFileStreamAsync(Uri uri)
