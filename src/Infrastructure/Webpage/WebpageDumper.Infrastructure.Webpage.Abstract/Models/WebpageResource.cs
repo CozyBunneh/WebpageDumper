@@ -96,6 +96,7 @@ public record WebpageResource(String fileName, String path) : IComparable<Webpag
 
     public String GetFileExtension()
     {
-        return this.fileName.Split('.').Last();
+        var last = this.fileName.Split('.').Last();
+        return last.Contains('?') ? last.Split('?')[0] : last;
     }
 }
