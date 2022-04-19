@@ -19,15 +19,18 @@ public class ProgressLoaderService : IProgressLoaderService
     private const ConsoleColor BackgroundColor = ConsoleColor.DarkGray;
     private const Char ProgressCharacter = '─';
 
+    private IServiceProvider _serviceProvider;
     private ILogger<ProgressLoaderService> _logger;
     private IWebService _webService;
     private IStorageService _storageService;
 
     public ProgressLoaderService(
+        IServiceProvider serviceProvider,
         ILogger<ProgressLoaderService> logger,
         IWebService webService,
         IStorageService storageService)
     {
+        _serviceProvider = serviceProvider;
         _logger = logger;
         _webService = webService;
         _storageService = storageService;
@@ -90,7 +93,7 @@ public class ProgressLoaderService : IProgressLoaderService
     {
         var myEvent = new ManualResetEvent(false);
         ThreadPool.QueueUserWorkItem(
-            new WaitCallback(DownloadTask.DownloadFileAsync),
+            DownloadTask.DownloadFileAsync,
             GetDownloadThreadObjectArray(
                 command,
                 failedWebpageResources,
@@ -107,10 +110,12 @@ public class ProgressLoaderService : IProgressLoaderService
         ProgressBar progressBar,
         ManualResetEvent myEvent)
     {
+        var webService = _serviceProvider.GetService(typeof(IWebService));
+        var storageService = _serviceProvider.GetService(typeof(IStorageService));
         return new object[]
         {
-            _webService,
-            _storageService,
+            webService!,
+            storageService!,
             failedWebpageResources,
             command,
             webpageResource,
