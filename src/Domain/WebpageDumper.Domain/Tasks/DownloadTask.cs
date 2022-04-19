@@ -14,7 +14,7 @@ public static class DownloadTask
         if (args != null)
         {
             IWebService? webService = args[0] as IWebService;
-            IFileService? fileService = args[1] as IFileService;
+            IStorageService? storageService = args[1] as IStorageService;
             IList<WebpageResource>? failedWebpageResources = args[2] as IList<WebpageResource>;
             DownloadWebpageCommand? command = args[3] as DownloadWebpageCommand;
             WebpageResource? webpageResource = args[4] as WebpageResource;
@@ -22,7 +22,7 @@ public static class DownloadTask
             ManualResetEvent? myEvent = (ManualResetEvent)args[6];
 
             if (webService != null
-                && fileService != null
+                && storageService != null
                 && failedWebpageResources != null
                 && command != null
                 && webpageResource != null
@@ -32,14 +32,15 @@ public static class DownloadTask
                 Task<Stream> fileStream = webService.GetWebpageResourceAsStreamAsync(command.uri, webpageResource);
                 try
                 {
-                    fileService.WriteFileToPathAsync(
-                                        command.output,
-                                        fileStream,
-                                        webpageResource.fileName,
-                                        webpageResource.path).Wait();
+                    storageService.WriteFileToPathAsync(
+                        command.output,
+                        fileStream,
+                        webpageResource.fileName,
+                        webpageResource.path).Wait();
                 }
                 catch (AggregateException)
                 {
+                    // Catch 404 and add the failed resource into a list so that it can later be displayed.
                     failedWebpageResources.Add(webpageResource);
                 }
                 progressBar.Tick();
