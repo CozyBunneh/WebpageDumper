@@ -32,7 +32,10 @@ public class WebpageDumperService : IWebpageDumperService
     /// <returns></returns>
     public async Task DumpWebpage(DownloadWebpageCommand command)
     {
-        var indexPageAsString = await GetWebpageIndexAsString(command);
+        var (indexPageAsStringTask, updatedCommand) = GetWebpageIndexAsString(command);
+        var indexPageAsString = await indexPageAsStringTask;
+        command = updatedCommand;
+
         if (indexPageAsString == null || indexPageAsString == "")
         {
             return;
@@ -57,11 +60,11 @@ public class WebpageDumperService : IWebpageDumperService
     /// <param name="command"></param>
     /// <param name="lastTry">Only do one recursive retry, no infinite looping</param>
     /// <returns></returns>
-    private Task<String> GetWebpageIndexAsString(DownloadWebpageCommand command, bool lastTry = false)
+    private (Task<String>, DownloadWebpageCommand) GetWebpageIndexAsString(DownloadWebpageCommand command, bool lastTry = false)
     {
         try
         {
-            return _spinnerLoaderService.GetWebpageIndex(command.uri);
+            return (_spinnerLoaderService.GetWebpageIndex(command.uri), command);
         }
         catch (AggregateException) // Received on 404 errors, for google.com a retry with www.google.com is performed or vice versa.ß
         {
@@ -72,7 +75,7 @@ public class WebpageDumperService : IWebpageDumperService
             }
             else
             {
-                return CouldNotGetIndexAsString();
+                return (CouldNotGetIndexAsString(), command);
             }
         }
     }

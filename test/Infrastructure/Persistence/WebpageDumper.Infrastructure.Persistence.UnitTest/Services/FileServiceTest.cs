@@ -30,14 +30,14 @@ public class FileServiceTest
     {
         // Arrange
         var sut = _fixture.Create<FileService>();
-        var fileStream = Substitute.For<Stream>();
-        fileStream.CopyToAsync(Arg.Any<FileStream>()).Returns(Task.CompletedTask);
+        var fileStreamSubstitute = Substitute.For<Stream>();
+        fileStreamSubstitute.CopyToAsync(Arg.Any<FileStream>()).Returns(Task.CompletedTask);
         var fileName = "test.txt";
 
         // Act
-        await sut.WriteFile(fileStream, fileName);
+        await sut.WriteFile(fileStreamSubstitute, fileName);
 
         // Assert
-        await fileStream.Received().CopyToAsync(Arg.Any<FileStream>());
+        await fileStreamSubstitute.Received().CopyToAsync(Arg.Any<FileStream>());
     }
 }
