@@ -14,6 +14,7 @@ public class ProgressLoaderService : IProgressLoaderService
     private const String StartingDownloadOfResourcesUsing = "Starting download of resources using ";
     private const String ThreadsToOutput = " threads to the output folder: ";
     private const String DownloadingResourcesFrom = "Downloading resources from: ";
+    private const String UnableToDownloadTheFiles = "Unable to download the files:";
     private const ConsoleColor ForegroundColor = ConsoleColor.Magenta;
     private const ConsoleColor BackgroundColor = ConsoleColor.DarkGray;
     private const Char ProgressCharacter = '─';
@@ -58,14 +59,7 @@ public class ProgressLoaderService : IProgressLoaderService
                 webpageResources.Count,
                 progressBar);
         }
-        if (failedWebpageResources.Count > 0)
-        {
-            Console.WriteLine("Unable to download the files:");
-            foreach (var failedWebpageResource in failedWebpageResources)
-            {
-                Console.WriteLine($"\t{failedWebpageResource.path}/{failedWebpageResource.fileName}");
-            }
-        }
+        ShowFilesThatCouldntBeDownloadedInConsoleOutput(failedWebpageResources);
     }
 
     private void RunAllDownloadThreads(
@@ -123,5 +117,17 @@ public class ProgressLoaderService : IProgressLoaderService
             progressBar,
             myEvent
         };
+    }
+
+    private void ShowFilesThatCouldntBeDownloadedInConsoleOutput(IList<WebpageResource> failedWebpageResources)
+    {
+        if (failedWebpageResources.Count > 0)
+        {
+            Console.WriteLine(UnableToDownloadTheFiles);
+            foreach (var failedWebpageResource in failedWebpageResources)
+            {
+                Console.WriteLine($"\t{failedWebpageResource.path}/{failedWebpageResource.fileName}");
+            }
+        }
     }
 }

@@ -19,11 +19,13 @@ public class ConsoleService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await ParseCommandLineArguments();
+        await ParseCommandLineArgumentsAndRun();
+
+        // Stop the application once done
         _hostApplicationLifetime.StopApplication();
     }
 
-    private async Task ParseCommandLineArguments()
+    private async Task ParseCommandLineArgumentsAndRun()
     {
         await Parser.Default.ParseArguments<CommandLineOptions>(Environment.GetCommandLineArgs())
                             .WithParsedAsync(RunAsync);

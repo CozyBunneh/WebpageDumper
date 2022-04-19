@@ -13,6 +13,7 @@ public static class DownloadTask
         object[]? args = state as object[];
         if (args != null)
         {
+            // Get all arguments from the object array.
             IWebService? webService = args[0] as IWebService;
             IStorageService? storageService = args[1] as IStorageService;
             IList<WebpageResource>? failedWebpageResources = args[2] as IList<WebpageResource>;

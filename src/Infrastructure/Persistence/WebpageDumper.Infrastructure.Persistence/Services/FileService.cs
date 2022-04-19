@@ -25,6 +25,14 @@ public class FileService : IStorageService
         }
     }
 
+    /// <summary>
+    ///     Pipe a file stream task to a file writer in an asynchronous manner.
+    /// </summary>
+    /// <param name="output"></param>
+    /// <param name="fileData"></param>
+    /// <param name="fileName"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public async Task WriteFileToPathAsync(
         string output,
         Task<Stream> fileData,
@@ -34,6 +42,14 @@ public class FileService : IStorageService
         await WriteFileToPath(output, await fileData, fileName, path);
     }
 
+    /// <summary>
+    ///     Write an already synchronously fetched file stream to a file.
+    /// </summary>
+    /// <param name="output"></param>
+    /// <param name="fileData"></param>
+    /// <param name="fileName"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public Task WriteFileToPath(
         string output,
         Stream fileData,

@@ -4,7 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using WebpageDumper.Infrastructure.Webpage.Extensions;
 
-namespace WebpageDumper.Infrastructure.Webpage.UnitTest;
+namespace WebpageDumper.Infrastructure.Webpage.UnitTest.Extensions;
 
 public class StringExtensionsTest
 {
