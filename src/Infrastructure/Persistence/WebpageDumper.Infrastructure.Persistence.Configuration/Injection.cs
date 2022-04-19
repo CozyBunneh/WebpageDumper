@@ -8,7 +8,7 @@ public static class Injections
     public static IServiceCollection AddPersistenceServices(
       this IServiceCollection services)
     {
-        services.AddTransient<IFileService, FileService>();
+        services.AddTransient<IStorageService, FileService>();
 
         return services;
     }

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebpageDumper.Infrastructure.Persistence.Services;
 
-public class FileService : IFileService
+public class FileService : IStorageService
 {
     private ILogger<FileService> _logger;
 
@@ -26,38 +26,38 @@ public class FileService : IFileService
     }
 
     public async Task WriteFileToPathAsync(
-        string outputDir,
+        string output,
         Task<Stream> fileData,
         string fileName,
         string? path = null)
     {
-        await WriteFileToPath(outputDir, await fileData, fileName, path);
+        await WriteFileToPath(output, await fileData, fileName, path);
     }
 
     public Task WriteFileToPath(
-        string outputDir,
+        string output,
         Stream fileData,
         string fileName,
         string? path = null)
     {
-        var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(outputDir, fileName, path);
+        var fileNameWithFullPath = CreateDirectoryAndReturnFullFilenamePath(output, fileName, path);
         return WriteFile(fileData, fileNameWithFullPath);
     }
 
     private String CreateDirectoryAndReturnFullFilenamePath(
-        string outputDir,
+        string output,
         string fileName,
         string? path = null)
     {
         if (!String.IsNullOrEmpty(path))
         {
-            CreateDirectory($"{outputDir}/{path}");
-            fileName = $"{outputDir}/{path}/{fileName}";
+            CreateDirectory($"{output}/{path}");
+            fileName = $"{output}/{path}/{fileName}";
         }
         else
         {
-            CreateDirectory($"{outputDir}");
-            fileName = $"{outputDir}/{fileName}";
+            CreateDirectory($"{output}");
+            fileName = $"{output}/{fileName}";
         }
 
         return fileName;

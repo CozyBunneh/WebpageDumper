@@ -20,16 +20,16 @@ public class ProgressLoaderService : IProgressLoaderService
 
     private ILogger<ProgressLoaderService> _logger;
     private IWebService _webService;
-    private IFileService _fileService;
+    private IStorageService _storageService;
 
     public ProgressLoaderService(
         ILogger<ProgressLoaderService> logger,
         IWebService webService,
-        IFileService fileService)
+        IStorageService storageService)
     {
         _logger = logger;
         _webService = webService;
-        _fileService = fileService;
+        _storageService = storageService;
     }
 
     public void DownloadWebpageResources(
@@ -116,7 +116,7 @@ public class ProgressLoaderService : IProgressLoaderService
         return new object[]
         {
             _webService,
-            _fileService,
+            _storageService,
             failedWebpageResources,
             command,
             webpageResource,
