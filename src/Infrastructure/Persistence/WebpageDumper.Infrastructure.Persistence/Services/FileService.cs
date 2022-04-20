@@ -29,6 +29,14 @@ public class FileService : IStorageService
         await WriteFileAsync(await fileData, fileNameWithFullPath);
     }
 
+    /// <summary>
+    ///     Pipe a file as string task to a file writer in an asynchronous manner.
+    /// </summary>
+    /// <param name="output"></param>
+    /// <param name="fileData"></param>
+    /// <param name="fileName"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public async Task WriteFileAsStringToPathAsync(
         string output,
         Task<String> fileData,
