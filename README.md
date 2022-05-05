@@ -8,6 +8,10 @@ The resulting index.html downloaded from a webpage isn't manipulated by this too
 
 There are only unit tests written for this project, no integration tests.
 
+## Limitations
+
+Using a threadpool for threading didn't work out all that well, simply using Tasks and letting the dotnet runtime sort the threading out itself would've been better.
+
 ## Install Dotnet
 
 ### MacOS
